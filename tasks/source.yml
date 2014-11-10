@@ -1,0 +1,35 @@
+---
+- name: Check if we have a Git binary
+  stat: path=/usr/bin/git
+  register: have_git
+
+- name: Fetch the latest Git source
+  get_url:
+    url: "https://www.kernel.org/pub/software/scm/git/git-{{mrcrilly_git_version}}.tar.gz"
+    dest: /tmp/git-{{mrcrilly_git_version}}.tar.gz
+  when: not have_git.stat.exists
+
+- name: Extract the source code
+  command: tar -xzvf /tmp/git-{{mrcrilly_git_version}}.tar.gz
+  args:
+    chdir: /tmp
+    creates: /tmp/git-{{mrcrilly_git_version}}/README
+  when: not have_git.stat.exists
+
+- name: Configure the compile process
+  command: ./configure prefix={{mrcrilly_git_prefix}}
+  args:
+    chdir: /tmp/git-{{mrcrilly_git_version}}
+  when: not have_git.stat.exists
+
+- name: Compile Git
+  command: make all doc info
+  args:
+    chdir: /tmp/git-{{mrcrilly_git_version}}
+  when: not have_git.stat.exists
+
+- name: Install Git
+  command: make install install-doc install-info install-html
+  args:
+    chdir: /tmp/git-{{mrcrilly_git_version}}
+  when: not have_git.stat.exists

@@ -1,0 +1,38 @@
+---
+- name: Remove any Git system installation (Debian)
+  apt:
+    pkg: "git"
+    state: absent
+  when: ansible_os_family == "Debian" and mrcrilly_git_remove_system_install
+
+- name: Remove any Git system installation (RedHat)
+  yum:
+    name: "git"
+    state: absent
+  when: ansible_os_family == "RedHat" and mrcrilly_git_remove_system_install == "yes"
+
+- name: Install Git dependencies (Debian)
+  apt:
+    pkg: "{{item}}"
+    state: latest
+  with_items:
+    - libcurl4-openssl-dev
+    - libexpat1-dev
+    - libz-dev
+    - libssl-dev
+  when: ansible_os_family == "Debian"
+
+- name: Install Git dependencies (RedHat)
+  yum:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - libcurl-devel
+    - zlib-devel
+    - openssl-devel
+    - expat-devel
+    - perl-devel
+    - tcl-devel
+    - gettext
+    - asciidoc
+  when: ansible_os_family == "RedHat"

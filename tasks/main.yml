@@ -1,0 +1,17 @@
+---
+- include: dependencies.yml
+  tags:
+    - mrcrilly_git
+    - mrcrilly_git_dependencies
+
+- include: source.yml
+  tags:
+    - mrcrilly_git
+    - mrcrilly_git_source
+  when: mrcrilly_git_from_source
+
+- include: package.yml
+  tags:
+    - mrcrilly_git
+    - mrcrilly_git_package
+  when: not mrcrilly_git_from_source

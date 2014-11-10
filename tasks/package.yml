@@ -1,0 +1,12 @@
+---
+- name: Install/Update Git (Debian)
+  apt:
+    pkg: git
+    state: latest
+  when: ansible_os_family == "Debian"
+
+- name: Install/Update Git (RedHat)
+  yum:
+    name: git
+    state: latest
+  when: ansible_os_family == "RedHat"
